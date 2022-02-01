@@ -1,0 +1,105 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Kide.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        xmlns:behaviors="clr-namespace:Kide.Behaviors"
+        xmlns:views="clr-namespace:Kide.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Kide.Views.MainWindow"
+        Icon="avares://Kide/Assets/kode.png"
+        FontFamily="avares://Kide/Assets/Fonts#Open Sans"
+        ExtendClientAreaToDecorationsHint="True"
+        TransparencyLevelHint="Mica"
+        Title="Kide">
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <DockPanel LastChildFill="True">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Image Margin="8,0,4,0" Width="24" Height="24" Source="avares://Kide/Assets/kode.png"/>
+            <Menu x:Name="AppMenu">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open" Command="{Binding OpenFileCommand}"/>
+                    <MenuItem Header="_Save" />
+                    <MenuItem Header="_Save As" />
+                    <Separator/>
+                    <MenuItem Header="_Exit" />
+                </MenuItem>
+                <MenuItem Header="Edit">
+                    <MenuItem Header="Undo"/>
+                    <MenuItem Header="Redo"/>
+                    <Separator/>
+                    <MenuItem Header="Find"/>
+                    <MenuItem Header="Find and Replace"/>
+                </MenuItem>
+                <MenuItem Header="Run">
+
+                </MenuItem>
+                <MenuItem Header="Tools">
+                    <MenuItem Header="SDK Manager" Command="{Binding OpenSdkManagerCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Help">
+                    <MenuItem Header="About"/>
+                </MenuItem>
+            </Menu>
+            <Label Background="#181818" Padding="12,0" Margin="8,4">
+                <TextBlock FontSize="12" Height="16" FontWeight="SemiBold" Text="Kide"/>
+            </Label>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="2">
+            <Button>
+                <PathIcon Width="12" Height="12" Data="{StaticResource RunGeometry}"/>
+            </Button>
+        </StackPanel>
+        <DockPanel Height="24" Background="#7289DA" DockPanel.Dock="Bottom" LastChildFill="False">
+            <DockPanel.Styles>
+                <Style Selector="TextBlock">
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="Padding" Value="8,2"/>
+                </Style>
+                <Style Selector="TextBlock:pointerover">
+                    <Setter Property="Background" Value="#8296DE"/>
+                </Style>
+            </DockPanel.Styles>
+            <TextBlock Text="{Binding EditorEncoding.EncodingName}"/>
+            <TextBlock Text="{Binding IndentSize, StringFormat={}{0} spaces}" DockPanel.Dock="Right"/>
+            <TextBlock Text="{Binding LinebreakChar}" DockPanel.Dock="Right"/>
+            <TextBlock DockPanel.Dock="Right">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}Ln {0}, Col {1}">
+                        <Binding Path="CaretPos.Line"/>
+                        <Binding Path="CaretPos.Column"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </DockPanel>
+        <avaloniaEdit:TextEditor x:Name="MainEditor" Padding="4"
+                                 Background="#181818"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 VerticalScrollBarVisibility="Auto"
+                                 FontFamily="avares://Kide/Assets/Fonts#JetBrains Mono"
+                                 FontWeight="Normal"
+                                 FontSize="13"
+                                 Encoding="{Binding EditorEncoding, Mode=TwoWay}"
+                                 WordWrap="False" ShowLineNumbers="True">
+            <avaloniaEdit:TextEditor.Options>
+                <avaloniaEdit:TextEditorOptions EnableHyperlinks="True" ConvertTabsToSpaces="True" ShowSpaces="True" EnableRectangularSelection="True" HighlightCurrentLine="True"/>
+            </avaloniaEdit:TextEditor.Options>
+            <avaloniaEdit:TextEditor.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Cut">
+                        <MenuItem.Icon>
+                            <PathIcon Width="12" Height="12" Data="{StaticResource CutGeometry}"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </avaloniaEdit:TextEditor.ContextMenu>
+            <Interaction.Behaviors>
+                <behaviors:DocumentTextBindingBehavior Text="{Binding Code, Mode=TwoWay}" />
+            </Interaction.Behaviors>
+        </avaloniaEdit:TextEditor>
+    </DockPanel>
+</Window>
