@@ -10,9 +10,11 @@ namespace Kide
 {
     public class App : Application
     {
-        public string Platform => AvaloniaLocator.Current.GetService<IRuntimePlatform>()?.GetRuntimeInfo().OperatingSystem.ToString();
-        public string Architecture => Environment.Is64BitOperatingSystem ? "x64" : "x86";
-        
+        public static OperatingSystemType? Platform => AvaloniaLocator.Current.GetService<IRuntimePlatform>()?.GetRuntimeInfo()
+            .OperatingSystem;
+
+        public static string Architecture => Environment.Is64BitOperatingSystem ? "x64" : "x86";
+
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -21,12 +23,10 @@ namespace Kide
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(desktop.MainWindow)
+                    DataContext = new MainWindowViewModel()
                 };
-            }
 
             base.OnFrameworkInitializationCompleted();
         }

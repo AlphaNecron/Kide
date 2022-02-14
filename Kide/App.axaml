@@ -3,16 +3,16 @@
              xmlns:local="using:Kide"
              x:Class="Kide.App">
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme Mode="Dark"/>
+        <FluentTheme Mode="Dark" />
         <StyleInclude Source="avares://AvaloniaEdit/AvaloniaEdit.xaml" />
         <StyleInclude Source="avares://Kide/Assets/Icons.axaml" />
-        <StyleInclude Source="avares://Dock.Avalonia/Themes/DockFluentTheme.axaml"/>
+        <StyleInclude Source="avares://Dock.Avalonia/Themes/DockFluentTheme.axaml" />
         <Style Selector="ContextMenu>MenuItem">
-            <Setter Property="FontFamily" Value="avares://Kide/Assets/Fonts#Open Sans"/>
+            <Setter Property="FontFamily" Value="avares://Kide/Assets/Fonts#Open Sans" />
         </Style>
     </Application.Styles>
 </Application>

@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace Kide.Views
 {
-    public partial class SdkManagerDialog : Window
+    public class SdkManagerDialog : Window
     {
         public SdkManagerDialog()
         {
