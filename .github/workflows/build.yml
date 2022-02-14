@@ -1,0 +1,39 @@
+name: build
+on:
+  create:
+    tags:
+      - v0.*
+jobs:
+  build:
+    runs-on: windows-latest
+    name: build for ${{ matrix.runtime }}
+    strategy:
+      matrix:
+        runtime: [win-x64,win-x86,win-arm,win-arm64,linux-x64,linux-musl-x64,linux-arm,linux-arm64,osx.11.0-x64,osx.10.15-x64,osx.10.14-x64,osx.10.13-x64]
+    steps:
+      - uses: actions/checkout@v2
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: build for ${{ matrix.runtime }}
+        run: dotnet build -o ./out/kide-${{ matrix.runtime }}/ -r ${{ matrix.runtime }} -c Release ./Kide/Kide.csproj
+      - name: compress ${{ matrix.runtime }} build with zip
+        if: ${{ startsWith(matrix.runtime, 'win') || startsWith(matrix.runtime, 'osx') }}
+        working-directory: ./out
+        run: 7z a -tzip kide-${{ github.ref_name }}-${{ matrix.runtime }}.zip ./kide-${{ matrix.runtime }} -r
+      - name: compress ${{ matrix.runtime }} build with gzip
+        if: ${{ startsWith(matrix.runtime, 'linux') }}
+        working-directory: ./out
+        run: tar -cvzf kide-${{ github.ref_name }}-${{ matrix.runtime }}.tar.gz ./kide-${{ matrix.runtime }}
+      - name: upload release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: |
+            ./out/kide-**.zip
+            ./out/kide-**.tar.gz
+          fail_on_unmatched_files: false
